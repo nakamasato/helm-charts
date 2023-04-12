@@ -1,4 +1,4 @@
-name: chart-test-mysql-operator
+name: mysql-operator
 
 on:
   pull_request:
