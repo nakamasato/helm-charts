@@ -7,8 +7,13 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: checkout
         uses: actions/checkout@v3
+        
+      - name: extract version
+        run: |
+          echo "VERSION=$(yq '.version' charts/mysql-operator/Chart.yaml)" >> $GITHUB_ENV
+          echo "APP_VERSION=$(yq '.appVersion' charts/mysql-operator/Chart.yaml)" >> $GITHUB_ENV
 
       - name: create kind cluster
         run: kind create cluster --config kind-config.yml --wait 30s
@@ -20,7 +25,7 @@ jobs:
           helm repo update
 
       - name: helm install mysql-operator
-        run: helm install mysql-operator nakamasato/mysql-operator
+        run: helm install mysql-operator nakamasato/mysql-operator --version $VERSION --wait --timeout=90s
 
       - name: run mysql
         run: kubectl apply -k https://github.com/nakamasato/mysql-operator/config/mysql
@@ -32,4 +37,4 @@ jobs:
         run: kubectl wait deployment -n default mysql --for condition=Available=True --timeout=90s
         
       - name: apply sample objects
-        run: kubectl apply -k https://github.com/nakamasato/mysql-operator/config/samples-on-k8s
+        run: kubectl apply -k https://github.com/nakamasato/mysql-operator/config/samples-on-k8s?ref=${APP_VERSION}
