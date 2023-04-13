@@ -18,6 +18,16 @@ entries:
     version: 0.1.0
   mysql-operator:
   - apiVersion: v2
+    appVersion: v0.3.0
+    created: "2023-04-13T22:18:51.344315895Z"
+    description: A Helm chart for Kubernetes
+    digest: 7f19b8a8ce0efa41e11e7621f5ae11b30b3ce1bc9d25f87c14795712e2d2135f
+    name: mysql-operator
+    type: application
+    urls:
+    - https://github.com/nakamasato/helm-charts/releases/download/mysql-operator-v0.3.0/mysql-operator-v0.3.0.tgz
+    version: v0.3.0
+  - apiVersion: v2
     appVersion: v0.2.2
     created: "2023-04-13T22:06:10.371642581Z"
     description: A Helm chart for Kubernetes
@@ -47,4 +57,4 @@ entries:
     urls:
     - https://github.com/nakamasato/helm-charts/releases/download/mysql-operator-0.1.0/mysql-operator-0.1.0.tgz
     version: 0.1.0
-generated: "2023-04-13T22:06:10.371655281Z"
+generated: "2023-04-13T22:18:51.344441003Z"
