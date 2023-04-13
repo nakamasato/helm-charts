@@ -1,0 +1,54 @@
+name: mysql-operator
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/mysql-operator.yaml
+      - charts/mysql-operator/**
+
+concurrency:
+  group: ${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+        
+      - name: extract version
+        run: |
+          VERSION=$(yq '.version' charts/mysql-operator/Chart.yaml)
+          APP_VERSION=$(yq '.appVersion' charts/mysql-operator/Chart.yaml)
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          echo "APP_VERSION=${APP_VERSION}" >> $GITHUB_ENV
+          {
+            echo "### Versions"
+            echo "- version: $VERSION
+            echo "- appVersion: $APP_VERSION
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: create kind cluster
+        run: kind create cluster --config kind-config.yml --wait 30s
+
+      - name: helm repo add and update
+        run: |
+          helm version
+          helm repo add nakamasato https://nakamasato.github.io/helm-charts
+          helm repo update
+
+      - name: helm install mysql-operator
+        run: helm install mysql-operator nakamasato/mysql-operator --version $VERSION --wait --timeout=90s
+
+      - name: run mysql
+        run: kubectl apply -k https://github.com/nakamasato/mysql-operator/config/mysql
+
+      - name: wait until mysql-operator is ready
+        run: kubectl wait deployment -n default mysql-operator-controller-manager --for condition=Available=True --timeout=90s
+
+      - name: wait unti mysql is ready
+        run: kubectl wait deployment -n default mysql --for condition=Available=True --timeout=90s
+        
+      - name: apply sample objects
+        run: kubectl apply -k https://github.com/nakamasato/mysql-operator/config/samples-on-k8s?ref=${APP_VERSION}
