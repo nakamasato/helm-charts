@@ -30,3 +30,6 @@ jobs:
 
       - name: wait unti mysql is ready
         run: kubectl wait deployment -n default mysql --for condition=Available=True --timeout=90s
+        
+      - name: apply sample objects
+        run: kubectl apply -k https://github.com/nakamasato/mysql-operator/config/samples-on-k8s
