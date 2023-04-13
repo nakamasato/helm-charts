@@ -17,6 +17,6 @@ jobs:
           helm repo add nakamasato https://nakamasato.github.io/helm-charts
           helm repo update
       - name: helm install mysql-operator
-        run: helm install mysql-operator nakamasato/mysql-operator
+        run: helm install mysql-operator nakamasato/mysql-operator --kubeconfig kubeconfig
       - name: run mysql
-        run: kubectl apply -k https://github.com/nakamasato/mysql-operator/config/mysql
+        run: kubectl apply -k https://github.com/nakamasato/mysql-operator/config/mysql --kubeconfig kubeconfig
