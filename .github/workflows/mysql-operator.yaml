@@ -3,6 +3,9 @@ name: mysql-operator
 on:
   pull_request:
 
+env:
+  KUBECONFIG: kubeconfig
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -20,10 +23,10 @@ jobs:
           helm repo update
 
       - name: helm install mysql-operator
-        run: helm install mysql-operator nakamasato/mysql-operator --kubeconfig kubeconfig
+        run: helm install mysql-operator nakamasato/mysql-operator
 
       - name: run mysql
-        run: kubectl apply -k https://github.com/nakamasato/mysql-operator/config/mysql --kubeconfig kubeconfig
+        run: kubectl apply -k https://github.com/nakamasato/mysql-operator/config/mysql
 
       - name: wait until mysql-operator is ready
         run: kubectl wait deployment -n default mysql-operator-controller-manager --for condition=Available=True --timeout=90s
