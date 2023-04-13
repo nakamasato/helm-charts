@@ -2,6 +2,9 @@ name: mysql-operator
 
 on:
   pull_request:
+    paths:
+      - .github/workflows/mysql-operator.yaml
+      - charts/mysql/**
 
 jobs:
   test:
