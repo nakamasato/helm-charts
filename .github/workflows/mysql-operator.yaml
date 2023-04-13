@@ -9,14 +9,24 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
       - name: create kind cluster
         run: kind create cluster --kubeconfig kubeconfig --config kind-config.yml --wait 30s
+
       - name: helm repo add and update
         run: |
           helm version
           helm repo add nakamasato https://nakamasato.github.io/helm-charts
           helm repo update
+
       - name: helm install mysql-operator
         run: helm install mysql-operator nakamasato/mysql-operator --kubeconfig kubeconfig
+
       - name: run mysql
         run: kubectl apply -k https://github.com/nakamasato/mysql-operator/config/mysql --kubeconfig kubeconfig
+
+      - name: wait until mysql-operator is ready
+        run: kubectl wait deployment -n default mysql-operator-controller-manager --for condition=Available=True --timeout=90s
+
+      - name: wait unti mysql is ready
+        run: kubectl wait deployment -n default mysql --for condition=Available=True --timeout=90s
