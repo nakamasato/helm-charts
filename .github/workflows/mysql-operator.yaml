@@ -19,8 +19,15 @@ jobs:
         
       - name: extract version
         run: |
-          echo "VERSION=$(yq '.version' charts/mysql-operator/Chart.yaml)" >> $GITHUB_ENV
-          echo "APP_VERSION=$(yq '.appVersion' charts/mysql-operator/Chart.yaml)" >> $GITHUB_ENV
+          VERSION=$(yq '.version' charts/mysql-operator/Chart.yaml)
+          APP_VERSION=$(yq '.appVersion' charts/mysql-operator/Chart.yaml)
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          echo "APP_VERSION=${APP_VERSION}" >> $GITHUB_ENV
+          {
+            echo "### Versions"
+            echo "- version: $VERSION
+            echo "- appVersion: $APP_VERSION
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: create kind cluster
         run: kind create cluster --config kind-config.yml --wait 30s
