@@ -21,7 +21,7 @@ jobs:
         run: |
           VERSION=$(yq '.version' charts/mysql-operator/Chart.yaml)
           APP_VERSION=$(yq '.appVersion' charts/mysql-operator/Chart.yaml)
-          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+
           echo "APP_VERSION=${APP_VERSION}" >> $GITHUB_ENV
           {
             echo "### Versions"
@@ -32,14 +32,8 @@ jobs:
       - name: create kind cluster
         run: kind create cluster --config kind-config.yml --wait 30s
 
-      - name: helm repo add and update
-        run: |
-          helm version
-          helm repo add nakamasato https://nakamasato.github.io/helm-charts
-          helm repo update
-
       - name: helm install mysql-operator
-        run: helm install mysql-operator nakamasato/mysql-operator --version $VERSION --wait --timeout=90s
+        run: helm install mysql-operator charts/mysql-operator --wait --timeout=90s
 
       - name: run mysql
         run: kubectl apply -k https://github.com/nakamasato/mysql-operator/config/mysql

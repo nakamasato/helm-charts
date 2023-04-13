@@ -3,7 +3,7 @@ controllerManager:
   manager:
     image:
       repository: ghcr.io/nakamasato/mysql-operator
-      tag: v0.2.0
+      tag: v0.2.2
     resources:
       limits:
         cpu: 200m
