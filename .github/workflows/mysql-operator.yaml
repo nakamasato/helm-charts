@@ -3,9 +3,6 @@ name: mysql-operator
 on:
   pull_request:
 
-env:
-  KUBECONFIG: kubeconfig
-
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -14,7 +11,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: create kind cluster
-        run: kind create cluster --kubeconfig kubeconfig --config kind-config.yml --wait 30s
+        run: kind create cluster --config kind-config.yml --wait 30s
 
       - name: helm repo add and update
         run: |
