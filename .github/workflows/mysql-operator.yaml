@@ -6,6 +6,10 @@ on:
       - .github/workflows/mysql-operator.yaml
       - charts/mysql-operator/**
 
+concurrency:
+  group: ${{ github.head_ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     runs-on: ubuntu-latest
