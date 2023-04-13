@@ -4,7 +4,7 @@ on:
   pull_request:
     paths:
       - .github/workflows/mysql-operator.yaml
-      - charts/mysql/**
+      - charts/mysql-operator/**
 
 jobs:
   test:
