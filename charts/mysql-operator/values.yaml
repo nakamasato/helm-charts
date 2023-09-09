@@ -1,4 +1,10 @@
 cloudSecretManagerType: raw # set gcp if you use GCP SecretManager
+# gcpServiceAccount: GSA_NAME@GSA_PROJECT.iam.gserviceaccount.com
+# gcpProjectId: <projectid>
+# cloudSQL:
+#   instanceConnectionName:
+#   enableIamAuth: false
+#   usePrivateIp: false
 controllerManager:
   manager:
     image:

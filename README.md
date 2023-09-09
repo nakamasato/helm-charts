@@ -20,6 +20,10 @@
     ```
     helm install example-from-my-repo nakamasato/helm-example
     ```
+1. Upgrade (optional)
+    ```
+    helm upgrade example-from-my-repo nakamasato/helm-example --set xxx=aaa
+    ```
 1. Uninstall
     ```
     helm uninstall example-from-my-repo
