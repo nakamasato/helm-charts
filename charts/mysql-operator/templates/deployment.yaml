@@ -31,8 +31,11 @@ spec:
       containers:
       - args:
         - --leader-elect
-        {{- if eq .Values.cloudSecretManagerType "gcp" }}
+        {{- if eq .Values.adminUserSecretType "gcp" }}
         - --cloud-secret-manager=gcp
+        {{- end }}
+        {{- if eq .Values.adminUserSecretType "k8s" }}
+        - --cloud-secret-manager=k8s
         {{- end }}
         command:
         - /manager
@@ -56,7 +59,7 @@ spec:
           }}
         securityContext:
           allowPrivilegeEscalation: false
-        {{- if eq .Values.cloudSecretManagerType "gcp" }}
+        {{- if eq .Values.adminUserSecretType "gcp" }}
         {{- if .Values.gcpServiceAccount }}
         env:
           - name: PROJECT_ID
@@ -72,7 +75,13 @@ spec:
             value: {{ .Values.gcpProjectId }}
         {{- end }}
         {{- end }}
-
+        {{- if eq .Values.adminUserSecretType "k8s" }}
+        env:
+          - name: WATCH_NAMESPACE
+            value: {{ .Release.Namespace }}
+          - name: SECRET_NAMESPACE
+            value: {{ .Release.Namespace }}
+        {{- end }}
       # https://cloud.google.com/sql/docs/mysql/connect-instance-kubernetes#deploy_the_sample_app
       {{- with .Values.cloudSQL }}
       # If you are using the Go Connector (recommended), you can
@@ -110,7 +119,7 @@ spec:
         runAsNonRoot: true
       serviceAccountName: {{ include "chart.fullname" . }}-controller-manager
       terminationGracePeriodSeconds: 10
-      {{- if and (eq .Values.cloudSecretManagerType "gcp") (empty .Values.gcpServiceAccount) }}
+      {{- if and (eq .Values.adminUserSecretType "gcp") (empty .Values.gcpServiceAccount) }}
       volumes:
         - name: gcp-sa-private-key
           secret:
