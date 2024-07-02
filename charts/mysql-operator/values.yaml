@@ -1,4 +1,6 @@
-cloudSecretManagerType: raw # set gcp if you use GCP SecretManager
+# set gcp if you use GCP SecretManager
+# set k8s if you use Kubernetes secrets
+adminUserSecretType: raw
 # gcpServiceAccount: GSA_NAME@GSA_PROJECT.iam.gserviceaccount.com
 # gcpProjectId: <projectid>
 # cloudSQL:

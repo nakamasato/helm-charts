@@ -10,13 +10,10 @@ rules:
   resources:
   - secrets
   verbs:
-  - create
-  - delete
   - get
   - list
-  - patch
-  - update
   - watch
+  - create
 - apiGroups:
   - ""
   resources:
