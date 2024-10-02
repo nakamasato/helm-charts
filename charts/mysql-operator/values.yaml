@@ -1,15 +1,17 @@
-cloudSecretManagerType: raw # set gcp if you use GCP SecretManager
+# set gcp if you use GCP SecretManager
+# set k8s if you use Kubernetes secrets
+adminUserSecretType: raw # set gcp if you use GCP SecretManager
 # gcpServiceAccount: GSA_NAME@GSA_PROJECT.iam.gserviceaccount.com
 # gcpProjectId: <projectid>
 # cloudSQL:
 #   instanceConnectionName:
 #   enableIamAuth: false
 #   usePrivateIp: false
+k8sSecretNamespace: default
 controllerManager:
   manager:
     image:
       repository: ghcr.io/nakamasato/mysql-operator
-      tag: v0.4.0
     resources:
       limits:
         cpu: 200m

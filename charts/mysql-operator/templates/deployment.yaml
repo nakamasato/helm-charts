@@ -31,8 +31,9 @@ spec:
       containers:
       - args:
         - --leader-elect
-        {{- if eq .Values.cloudSecretManagerType "gcp" }}
-        - --cloud-secret-manager=gcp
+        - --admin-user-secret-type={{ .Values.adminUserSecretType | default "raw" }}
+        {{- if eq .Values.adminUserSecretType "k8s" }}
+        - --k8s-secret-namespace={{ .Values.k8sSecretNamespace | default "default" }}
         {{- end }}
         command:
         - /manager
@@ -56,7 +57,7 @@ spec:
           }}
         securityContext:
           allowPrivilegeEscalation: false
-        {{- if eq .Values.cloudSecretManagerType "gcp" }}
+        {{- if eq .Values.adminUserSecretType "gcp" }}
         {{- if .Values.gcpServiceAccount }}
         env:
           - name: PROJECT_ID
@@ -110,7 +111,7 @@ spec:
         runAsNonRoot: true
       serviceAccountName: {{ include "chart.fullname" . }}-controller-manager
       terminationGracePeriodSeconds: 10
-      {{- if and (eq .Values.cloudSecretManagerType "gcp") (empty .Values.gcpServiceAccount) }}
+      {{- if and (eq .Values.adminUserSecretType "gcp") (empty .Values.gcpServiceAccount) }}
       volumes:
         - name: gcp-sa-private-key
           secret:
